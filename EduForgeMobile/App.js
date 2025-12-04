@@ -112,8 +112,14 @@ function LoginScreen({ navigation }) {
     axios.post(`${API_URL}/auth/login/`, { username, password })
       .then(async res => {
         setLoading(false);
-        const user = res.data.user;
-        const token = res.data.token;
+        // Defensive handling: ensure server returned user and token
+        const user = res.data?.user;
+        const token = res.data?.token;
+        if (!user || !token) {
+          console.error('Unexpected login response', res.data);
+          setAlert({ visible: true, title: 'Login Failed', message: 'Invalid response from server.', type: 'error' });
+          return;
+        }
         const role = user.is_staff ? 'teacher' : 'student';
         try {
           await AsyncStorage.setItem('token', token);
@@ -200,9 +206,14 @@ function RegisterScreen({ navigation }) {
     
     axios.post(`${API_URL}/auth/register/`, form).then(async (res) => {
       setLoading(false);
-      // API now returns token and user
-      const token = res.data.token;
-      const user = res.data.user || { username: form.username };
+      // Defensive: ensure server returned expected fields
+      const token = res.data?.token;
+      const user = res.data?.user || null;
+      if (!token || !user) {
+        console.error('Unexpected register response', res.data);
+        setAlert({ visible: true, title: 'Registration Failed', message: 'Invalid response from server.', type: 'error' });
+        return;
+      }
       try {
         if (token) {
           await AsyncStorage.setItem('token', token);
