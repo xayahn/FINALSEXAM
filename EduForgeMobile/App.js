@@ -15,8 +15,9 @@ import axios from 'axios';
 
 // ⚠️ CONNECTION SETTINGS
 // Use 'http://127.0.0.1:8000' for Web. Use 'http://10.0.2.2:8000' for Android Emulator.
-const BASE_URL = 'https://eduforge-frontend-backend.onrender.com';
-const API_URL = `${BASE_URL}/api`; 
+// BASE_URL should be the root of your backend (no trailing slash). API_URL will point to the /api/ namespace.
+const BASE_URL = 'https://finalsexam-1.onrender.com';
+const API_URL = `${BASE_URL}/api`;
 
 // --- DESIGN SYSTEM ---
 const ThemeContext = createContext();
@@ -108,7 +109,7 @@ function LoginScreen({ navigation }) {
   const handleLogin = () => {
     if (!username || !password) return setAlert({visible:true, title:'Missing Info', message:'Please enter username and password.', type: 'error'});
     setLoading(true);
-    axios.post(`${API_URL}/login/`, { username, password })
+    axios.post(`${API_URL}/auth/login/`, { username, password })
       .then(async res => {
         setLoading(false);
         const user = res.data.user;
@@ -127,7 +128,8 @@ function LoginScreen({ navigation }) {
       })
       .catch((err) => {
         setLoading(false);
-        const msg = err.response?.data?.error || "Unable to connect to server.";
+        console.error('Login error', err);
+        const msg = err.response?.data?.error || err.message || "Unable to connect to server.";
         setAlert({visible:true, title:'Login Failed', message: msg, type:'error'});
       });
   };
@@ -196,7 +198,7 @@ function RegisterScreen({ navigation }) {
     if(!form.username || !form.password || !form.email) return setAlert({visible:true, title:'Missing Fields', message:'Please fill all required fields.', type: 'error'});
     setLoading(true);
     
-    axios.post(`${API_URL}/register/`, form).then(async (res) => {
+    axios.post(`${API_URL}/auth/register/`, form).then(async (res) => {
       setLoading(false);
       // API now returns token and user
       const token = res.data.token;
@@ -215,7 +217,9 @@ function RegisterScreen({ navigation }) {
       setAlert({visible:true, title:"Success", message:"Account created successfully.", type:"success", onSuccess:()=>navigation.goBack()});
     }).catch(err => {
       setLoading(false);
-      setAlert({visible:true, title:"Error", message: err.response?.data?.username ? "Username taken." : "Registration failed.", type: 'error'});
+      console.error('Register error', err);
+      const msg = err.response?.data?.username ? "Username taken." : (err.message || "Registration failed.");
+      setAlert({visible:true, title:"Error", message: msg, type: 'error'});
     });
   };
 
