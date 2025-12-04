@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+env/
+ENV/
+/.venv/
+*.egg-info/
+dist/
+
+# SQLite DB
+db.sqlite3
+*.sqlite3
+
+# Django media and static (if you store uploads locally)
+media/
+media/*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Expo / React Native
+.expo/
+.expo-shared/
+android/
+ios/
+
+# Editor configs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.local
+/*.pem
