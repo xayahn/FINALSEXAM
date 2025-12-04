@@ -1,4 +1,5 @@
-{
+﻿{
+  "private": true,
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/native": "^7.1.22",
@@ -8,5 +9,13 @@
     "react-native-gesture-handler": "^2.29.1",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0"
+  },
+  "scripts": {
+    "start": "cd EduForgeMobile && npx expo start",
+    "mobile:start": "cd EduForgeMobile && npx expo start",
+    "mobile:install": "cd EduForgeMobile && npm install",
+    "mobile:web": "cd EduForgeMobile && npx expo start --web",
+    "mobile:build": "cd EduForgeMobile && npx eas build",
+    "mobile:build-web": "cd EduForgeMobile && npm ci && npx expo build:web"
   }
 }
