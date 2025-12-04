@@ -12,7 +12,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-me-for-production')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # ALLOWED_HOSTS should be a comma-separated list in Render (or '*' for testing)
-ALLOWED_HOSTS = 'https://finalsexam-1.onrender.com/' 
+# Parse env var robustly and normalise values (remove scheme and trailing slashes).
+import re
+import ast
+
+_raw_allowed = os.environ.get('ALLOWED_HOSTS', '*')
+def _clean_host(h: str) -> str:
+    h = h.strip()
+    # remove http:// or https:// if present
+    h = re.sub(r'^https?://', '', h)
+    # remove trailing slash
+    return h.rstrip('/')
+
+if _raw_allowed is None or _raw_allowed == '':
+    ALLOWED_HOSTS = []
+elif _raw_allowed.strip() == '*':
+    ALLOWED_HOSTS = ['*']
+else:
+    # allow JSON-like list in env, or comma-separated string
+    try:
+        parsed = ast.literal_eval(_raw_allowed)
+        if isinstance(parsed, (list, tuple)):
+            ALLOWED_HOSTS = [_clean_host(x) for x in parsed if x]
+        else:
+            ALLOWED_HOSTS = [_clean_host(x) for x in str(_raw_allowed).split(',') if x.strip()]
+    except Exception:
+        ALLOWED_HOSTS = [_clean_host(x) for x in str(_raw_allowed).split(',') if x.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
