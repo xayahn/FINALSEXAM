@@ -57,14 +57,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # POSTGRESQL DATABASE
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'EduForgeDB',
-        'USER': 'postgres',
-        'PASSWORD': 'admin123', # ⚠️ CHANGE THIS TO YOUR PASSWORD
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        # Use SQLite locally by default (so it works on your machine)
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
+        # Optimization settings
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
