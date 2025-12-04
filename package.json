@@ -16,6 +16,6 @@
     "mobile:install": "cd EduForgeMobile && npm install",
     "mobile:web": "cd EduForgeMobile && npx expo start --web",
     "mobile:build": "cd EduForgeMobile && npx eas build",
-    "mobile:build-web": "cd EduForgeMobile && npm ci && npx expo export --output-dir web-build -p web --no-ssg"
+    "mobile:build-web": "cd EduForgeMobile && npm ci && npx expo export --output-dir web-build -p web"
   }
 }
