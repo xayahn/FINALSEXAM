@@ -1,11 +1,7 @@
 // EduForgeMobile/src/api/index.js
 // Portable API client: resolve API_BASE at runtime and provide helpers.
 
-const API_BASE = (
-  (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) ||
-  (typeof window !== 'undefined' && (window.REACT_APP_API_URL || window.API_URL)) ||
-  ''
-).replace(/\/$/, '');
+const API_BASE = 'https://finalsexam.onrender.com';
 
 function buildUrl(path) {
   if (!path) return API_BASE || path;
