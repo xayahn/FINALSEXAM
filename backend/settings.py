@@ -140,3 +140,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "https://finalsexam-1.onrender.com", # Your FRONTEND URL (no trailing slash)
 ]
+
+CORS_ALLOW_CREDENTIALS = True
