@@ -18,9 +18,8 @@ import { login as apiLogin } from './src/api';
 // Use 'http://127.0.0.1:8000' for Web. Use 'http://10.0.2.2:8000' for Android Emulator.
 // BASE_URL should be the root of your backend (no trailing slash). API_URL will point to the /api/ namespace.
 const BASE_URL = (
-  (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) ||
-  (typeof window !== 'undefined' && (window.REACT_APP_API_URL || window.API_URL)) ||
-  'http://127.0.0.1:8000'
+  process.env.EXPO_PUBLIC_API_URL || 
+  'https://finalsexam.onrender.com' // Fallback directly to your live backend
 ).replace(/\/$/, '');
 
 const API_URL = `${BASE_URL}/api`;
