@@ -138,5 +138,5 @@ SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0'))
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "finalsexam-1.onrender.com", # Your FRONTEND URL (no trailing slash)
+    "https://finalsexam-1.onrender.com", # Your FRONTEND URL (no trailing slash)
 ]
