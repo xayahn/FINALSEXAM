@@ -12,11 +12,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import axios from 'axios';
+import { login as apiLogin } from './src/api';
 
 // ⚠️ CONNECTION SETTINGS
 // Use 'http://127.0.0.1:8000' for Web. Use 'http://10.0.2.2:8000' for Android Emulator.
 // BASE_URL should be the root of your backend (no trailing slash). API_URL will point to the /api/ namespace.
-const BASE_URL = 'https://finalsexam-1.onrender.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 const API_URL = `${BASE_URL}/api`;
 
 // --- DESIGN SYSTEM ---
@@ -27,7 +28,7 @@ const lightTheme = {
   border: '#E2E8F0', success: '#10B981', error: '#EF4444',
   shadow: Platform.select({
     web: { boxShadow: '0px 4px 8px rgba(100, 116, 139, 0.1)' },
-    default: { shadowColor: '#64748B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 3 }
+    default: { shadowColor: '#64748B', shadowOffset: { width: 0, height: 4 }, shadowOpsxacity: 0.05, shadowRadius: 8, elevation: 3 }
   })
 };
 const darkTheme = { 
@@ -109,12 +110,12 @@ function LoginScreen({ navigation }) {
   const handleLogin = () => {
     if (!username || !password) return setAlert({visible:true, title:'Missing Info', message:'Please enter username and password.', type: 'error'});
     setLoading(true);
-    axios.post(`${API_URL}/auth/login/`, { username, password })
-      .then(async res => {
+    apiLogin(username, password)
+      .then(async (res) => {
         setLoading(false);
         // Defensive handling: ensure server returned user and token
-        const user = res.data?.user;
-        const token = res.data?.token;
+        const user = res?.user;
+        const token = res?.token;
         if (!user || !token) {
           console.error('Unexpected login response', res.data);
           setAlert({ visible: true, title: 'Login Failed', message: 'Invalid response from server.', type: 'error' });
@@ -135,7 +136,7 @@ function LoginScreen({ navigation }) {
       .catch((err) => {
         setLoading(false);
         console.error('Login error', err);
-        const msg = err.response?.data?.error || err.message || "Unable to connect to server.";
+        const msg = err?.body?.error || err?.message || (err.response?.data?.error) || "Unable to connect to server.";
         setAlert({visible:true, title:'Login Failed', message: msg, type:'error'});
       });
   };

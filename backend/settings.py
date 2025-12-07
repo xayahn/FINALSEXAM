@@ -86,44 +86,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # POSTGRESQL DATABASE
-# Prefer a DATABASE_URL env var (Render provides this when you attach a Postgres service).
-# Fallback to individual env vars (DB_NAME etc) and finally to a local sqlite for dev.
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    # If a full DATABASE_URL is provided, use dj_database_url to parse it.
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, conn_health_checks=True)
-    }
-else:
-    # Build from individual env vars. Useful for local development or explicit Render vars.
-    DB_NAME = os.environ.get('DB_NAME', 'eduforgedb')
-    DB_USER = os.environ.get('DB_USER', 'postgres')
-    DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
-    DB_HOST = os.environ.get('DB_HOST', 'localhost')
-    DB_PORT = os.environ.get('DB_PORT', '5432')
+# Replace your existing DATABASES block with this in backend/settings.py
 
-    if DB_HOST == 'localhost' and DB_USER == '':
-        # final fallback to sqlite for extreme local sanity
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
-        }
-    else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': DB_NAME,
-                'USER': DB_USER,
-                'PASSWORD': DB_PASSWORD,
-                'HOST': DB_HOST,
-                'PORT': DB_PORT,
-                # Connection optimizations
-                'CONN_MAX_AGE': 600,
-                'CONN_HEALTH_CHECKS': True,
-            }
-        }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get(
+            'DATABASE_URL',
+            'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+        ),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

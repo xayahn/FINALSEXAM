@@ -1,25 +1,20 @@
 // EduForgeMobile/src/api/index.js
-// Portable API client: resolve API_BASE at runtime (handles different build systems)
+// Portable API client: resolve API_BASE at runtime and provide helpers.
 
-import { login } from '../api'; // adjust path
-
-async function handleLogin() {
-  try {
-    const result = await login(username, password);
-    // handle login result (token, user, etc.)
-  } catch (err) {
-    console.error('Login failed', err);
-    // show friendly error to user
-  }
-}
 const API_BASE = (
-  process.env.REACT_APP_API_URL || // create-react-app env
-  (typeof window !== 'undefined' && (window.REACT_APP_API_URL || window.API_URL)) || // runtime-injected or set on window
-  '' // fallback to relative paths
-).replace(/\/$/, ''); // remove trailing slash
+  (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) ||
+  (typeof window !== 'undefined' && (window.REACT_APP_API_URL || window.API_URL)) ||
+  ''
+).replace(/\/$/, '');
+
+function buildUrl(path) {
+  if (!path) return API_BASE || path;
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${API_BASE}${p}`;
+}
 
 async function request(path, options = {}) {
-  const url = `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`;
+  const url = buildUrl(path);
   const res = await fetch(url, {
     credentials: 'include',
     ...options,
@@ -28,7 +23,6 @@ async function request(path, options = {}) {
       ...(options.headers || {})
     }
   });
-  // optional: handle non-JSON or empty responses
   const text = await res.text();
   let data;
   try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
