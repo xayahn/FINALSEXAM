@@ -3,11 +3,7 @@
 // to use the configured API base. Import this file early (for example in
 // the top of `App.js`) if you want all fetch() calls to be rewritten.
 
-const API_BASE = (
-  (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) ||
-  (typeof window !== 'undefined' && (window.REACT_APP_API_URL || window.API_URL)) ||
-  ''
-).replace(/\/$/, '');
+const API_BASE = 'https://finalsexam.onrender.com';
 
 function absoluteUrl(url) {
   if (!url) return url;
